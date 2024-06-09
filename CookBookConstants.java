@@ -73,9 +73,9 @@ public interface CookBookConstants {
     String ADD_INGREDIENT_WINDOW_TITLE = "Add Ingredient";
     String FRIDGE_ERROR_MESSAGE = "Please select an ingredient from the fridge.";
     String SHELF_ERROR_MESSAGE = "Please select an ingredient from the shelf.";
-    String SET_QUANTITY_TEXT = "Enter the quantity (0-100):";
+    String SET_QUANTITY_TEXT = "Enter the quantity (1-100):";
     String SET_QUANTITY_WINDOW_TITLE = "Set Quantity";
-    String QUANTITY_RANGE_ERROR_MESSAGE = "Invalid quantity. Please enter a number between 0 and 100.";
+    String QUANTITY_RANGE_ERROR_MESSAGE = "Invalid quantity. Please enter a number between 1 and 100.";
     String INTEGER_CHECK_ERROR_MESSAGE = "Invalid quantity. Please enter an Integer.";
     String TYPE_CHECK_ERROR_MESSAGE = "Invalid input. Please enter a number.";
     String EMPTY_ERROR_MESSAGE = "Ingredient name cannot be empty.";
