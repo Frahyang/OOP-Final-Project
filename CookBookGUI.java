@@ -456,6 +456,7 @@ public class CookBookGUI implements CookBookConstants {
 
     // Method to add a new recipe
     private void addRecipe() {
+        Recipe selectedRecipe = null;
 
         // Used to save the user's previous input
         String recipeNameInput = "";
@@ -494,7 +495,7 @@ public class CookBookGUI implements CookBookConstants {
                 }
 
                 // Check if the recipe name already exists
-                if (recipeManager.isDuplicateRecipe(recipeName)) {
+                if (recipeManager.isDuplicateRecipe(recipeName, selectedRecipe)) {
                     JOptionPane.showMessageDialog(frame, DUPLICATE_RECIPE_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
                     continue;
                 }
@@ -590,7 +591,7 @@ public class CookBookGUI implements CookBookConstants {
                 }
 
                 // Check if the recipe name already exists
-                if (recipeManager.isDuplicateRecipe(recipeName)) {
+                if (recipeManager.isDuplicateRecipe(recipeName, selectedRecipe)) {
                     JOptionPane.showMessageDialog(frame, DUPLICATE_RECIPE_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
                     continue;
                 }

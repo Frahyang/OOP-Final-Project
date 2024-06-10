@@ -39,9 +39,11 @@ public class RecipeManager {
     }
 
     // Method to check for recipe duplicates
-    public boolean isDuplicateRecipe(String recipeName) {
+    public boolean isDuplicateRecipe(String recipeName, Recipe selectedRecipe) {
         for (Recipe recipe : recipes) {
-            if (recipe.getName().equalsIgnoreCase(recipeName)) {
+
+            // Checks if the recipe already exists in the list, selectedREcipe here is to allow the modifyRecipe method to work when the name of the recipe is the same
+            if (recipe.getName().equalsIgnoreCase(recipeName) && recipe != selectedRecipe) {
                 return true;
             }
         }
