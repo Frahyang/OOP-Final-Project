@@ -52,6 +52,11 @@ public class CookBookGUI implements CookBookConstants {
     private JList<Ingredient> shelfList;
     private DefaultListModel<Ingredient> shelfModel;
 
+    // Instances for file handling
+    private File recipeFile;
+    private File fridgeFile;
+    private File shelfFile;
+
     // These are the default values to add and decrement the ingredients from fridge and shelf
     private int fridgeIngredientQuantity = 1;
     private int shelfIngredientQuantity = 1;
@@ -60,7 +65,7 @@ public class CookBookGUI implements CookBookConstants {
     private JButton setFridgeQuantityButton;
     private JButton setShelfQuantityButton;
 
-    List<Ingredient> combinedContents = new ArrayList<>(); // This list will be used to combine both the ingredients from fridge and shelf
+    private List<Ingredient> combinedContents = new ArrayList<>(); // This list will be used to combine both the ingredients from fridge and shelf
     
     // Constructor for the current class
     public CookBookGUI() {
@@ -69,6 +74,25 @@ public class CookBookGUI implements CookBookConstants {
         fridge = new Storage();
         shelf = new Storage();
 
+        setFrame();
+
+        // Object instances for files for saving purposes
+        recipeFile = new File(RECIPE_FILE); // Stores recipes
+        fridgeFile = new File(FRIDGE_FILE); // Stores ingredients placed in the fridge
+        shelfFile = new File(SHELF_FILE); // Stores ingredients placed on the shelf
+
+        loadAllFiles();
+
+        // Ensures that whenever the app is loaded, all ingredient foreground colour is reset to black
+        resetIngredientStates();
+
+        // Ensures that all the necessary information are correctly displayed
+        updateRecipeList();
+        updateFridgeList();
+        updateShelfList();
+    }
+
+    private void setFrame() {
         // Sets the attributes for the window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -80,12 +104,9 @@ public class CookBookGUI implements CookBookConstants {
         frame.add(createRecipePanel(), BorderLayout.WEST); // The recipe panel set the left side of the app
         frame.add(createCentralPanel(), BorderLayout.EAST); // The fridge and shelf panel to the right
         frame.add(createRecipeDetailPanel(), BorderLayout.CENTER); // The recipe details at the center
+    }
 
-        // Object instances for files for saving purposes
-        File recipeFile = new File(RECIPE_FILE); // Stores recipes
-        File fridgeFile = new File(FRIDGE_FILE); // Stores ingredients placed in the fridge
-        File shelfFile = new File(SHELF_FILE); // Stores ingredients placed on the shelf
-
+    private void loadAllFiles() {
         // Load necessary data when application opens
         if (recipeFile.exists()) {
             recipeManager.loadRecipesFromFile(RECIPE_FILE);
@@ -96,14 +117,6 @@ public class CookBookGUI implements CookBookConstants {
         if (shelfFile.exists()) {
             shelf.loadContentsFromFile(SHELF_FILE);
         }
-
-        // Ensures that whenever the app is loaded, all ingredient foreground colour is reset to black
-        resetIngredientStates();
-
-        // Updating methods to make changes to the screen everytime the user does something
-        updateRecipeList();
-        updateFridgeList();
-        updateShelfList();
     }
 
     // Method to create the recipe panel
