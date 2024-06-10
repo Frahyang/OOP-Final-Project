@@ -27,6 +27,7 @@ public interface CookBookConstants {
     String REMOVE_RECIPE_TEXT = "Remove Recipe";
     String MODIFY_RECIPE_TEXT = "Modify Recipe";
     String RECIPE_PANEL_NAME = "                                                   Recipes";
+    String DUPLICATE_RECIPE_ERROR_MESSAGE = "Recipe with this name already exists.";
 
     // Constants for main page panel
     String COOK_BUTTON_TEXT = "Cook";
