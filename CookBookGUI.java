@@ -507,7 +507,7 @@ public class CookBookGUI implements CookBookConstants {
                     List<String> instructionsList = Arrays.asList(instructions.split("\\n"));
 
                     Recipe newRecipe = new Recipe(recipeName, ingredientList, instructionsList);
-                    recipeManager.addRecipe(newRecipe);
+                    recipeManager.addingRecipe(newRecipe);
 
                     DefaultListModel<Recipe> recipeModel = (DefaultListModel<Recipe>) recipeList.getModel();
                     recipeModel.addElement(newRecipe);
@@ -526,7 +526,7 @@ public class CookBookGUI implements CookBookConstants {
         Recipe selectedRecipe = recipeList.getSelectedValue();
         if (selectedRecipe != null) {
             playSound(RECIPE_SFX);
-            recipeManager.removeRecipe(selectedRecipe.getName());
+            recipeManager.removingRecipe(selectedRecipe.getName());
 
             DefaultListModel<Recipe> model = (DefaultListModel<Recipe>) recipeList.getModel();
             model.removeElement(selectedRecipe);
@@ -603,7 +603,7 @@ public class CookBookGUI implements CookBookConstants {
                     List<String> instructionsList = Arrays.asList(instructions.split("\\n"));
 
                     Recipe updatedRecipe = new Recipe(recipeName, ingredientList, instructionsList);
-                    recipeManager.modifyRecipe(selectedRecipe.getName(), updatedRecipe);
+                    recipeManager.modifyingRecipe(selectedRecipe.getName(), updatedRecipe);
 
                     DefaultListModel<Recipe> model = (DefaultListModel<Recipe>) recipeList.getModel();
                     int index = model.indexOf(selectedRecipe);

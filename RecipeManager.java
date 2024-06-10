@@ -23,13 +23,13 @@ public class RecipeManager {
     }
 
     // Methods to give changes to recipes
-    public void addRecipe(Recipe recipe) {
+    public void addingRecipe(Recipe recipe) {
         recipes.add(recipe);
     }
-    public void removeRecipe(String recipeName) {
+    public void removingRecipe(String recipeName) {
         recipes.removeIf(recipe -> recipe.getName().equals(recipeName));
     }
-    public void modifyRecipe(String recipeName, Recipe updatedRecipe) {
+    public void modifyingRecipe(String recipeName, Recipe updatedRecipe) {
         for (int i = 0; i < recipes.size(); i++) {
             if (recipes.get(i).getName().equals(recipeName)) {
                 recipes.set(i, updatedRecipe);
