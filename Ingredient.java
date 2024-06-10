@@ -5,13 +5,15 @@ public class Ingredient implements Serializable {
     // Instance variables
     private String name;
     private int quantity;
+    private String unit;
     private boolean available;
     private boolean highlighted;
 
     // Constructor
-    public Ingredient(String name, int quantity) {
+    public Ingredient(String name, int quantity, String unit) {
         this.name = name; // Ingredient name
         this.quantity = quantity; // Ingredient quantity
+        this.unit = unit;
         this.available = false; // Ingredient status
         this.highlighted = false; // For setting a cell of an ingredient to be highlighted
     }
@@ -23,6 +25,9 @@ public class Ingredient implements Serializable {
     public int getQuantity() {
         return quantity;
     }
+    public String getUnit() {
+        return unit;
+    }
 
     // Setters
     public void setName(String name) {
@@ -30,6 +35,9 @@ public class Ingredient implements Serializable {
     }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     // Necessary booleans
@@ -50,6 +58,6 @@ public class Ingredient implements Serializable {
 
     // Method to convert into string
     public String toString() {
-        return name + ": " + quantity;
+        return name + ": " + quantity + " " + unit;
     }
 }

@@ -40,6 +40,7 @@ public class CookBookGUI implements CookBookConstants {
     private RecipeManager recipeManager;
     private JList<Recipe> recipeList;
     private JTextArea recipeDetailsArea;
+    DefaultListModel<Recipe> recipeModel;
 
     // Instances for handling the fridge
     private Storage fridge;
@@ -58,6 +59,8 @@ public class CookBookGUI implements CookBookConstants {
     // Used to update the displayed set quantity
     private JButton setFridgeQuantityButton;
     private JButton setShelfQuantityButton;
+
+    List<Ingredient> combinedContents = new ArrayList<>(); // This list will be used to combine both the ingredients from fridge and shelf
     
     // Constructor for the current class
     public CookBookGUI() {
@@ -369,7 +372,7 @@ public class CookBookGUI implements CookBookConstants {
         // Iterates all the ingredients from a selected recipe and then appends it into the string builder
         recipeDetails.append(INGREDIENTS_TEXT);
         for (Ingredient ingredient : recipe.getIngredients()) {
-            recipeDetails.append(BULLET_POINT).append(ingredient.getName() + ": " + ingredient.getQuantity() + "\n");
+            recipeDetails.append(BULLET_POINT).append(ingredient.getName() + ": " + ingredient.getQuantity() + " " + ingredient.getUnit() + "\n");
         }
 
         // Iterates all the instructions from a selected recipe and then appends it into the string builder
@@ -391,21 +394,25 @@ public class CookBookGUI implements CookBookConstants {
 
     // Method to cook recipe
     private void cookRecipe(Recipe recipe) {
-        List<Ingredient> requiredIngredients = recipe.getIngredients(); // Gets the ingredients from the recipe details
-        List<Ingredient> combinedContents = new ArrayList<>(); // Gets the ingredients from the ingredient panels
-        
-        // Combine ingredients from fridge and shelf
         combinedContents.addAll(fridge.getContents());
         combinedContents.addAll(shelf.getContents());
+        List<Ingredient> requiredIngredients = recipe.getIngredients(); // Gets the ingredients from the recipe details
     
         boolean hasAllIngredients = true;
     
         // Check if all required ingredients are available in the combined contents
         for (Ingredient requiredIngredient : requiredIngredients) {
             Ingredient combinedIngredient = findIngredientInCombinedContents(combinedContents, requiredIngredient.getName());
+            boolean unitsMatch = combinedIngredient.getUnit().equals(requiredIngredient.getUnit());
+
             if (combinedIngredient == null || combinedIngredient.getQuantity() < requiredIngredient.getQuantity()) {
                 hasAllIngredients = false;
                 break;
+            } else {
+                if (unitsMatch == false) {
+                    hasAllIngredients = false;
+                    break;
+                }
             }
         }
 
@@ -470,7 +477,7 @@ public class CookBookGUI implements CookBookConstants {
 
             Object[] message = {
                 "Recipe Name:", recipeNameField,
-                "Ingredients (name:quantity per line):", new JScrollPane(ingredientsField),
+                "Ingredients (name:quantity:unit per line):", new JScrollPane(ingredientsField),
                 "Instructions (line-separated):", new JScrollPane(instructionsArea)
             };
 
@@ -510,7 +517,7 @@ public class CookBookGUI implements CookBookConstants {
                     Recipe newRecipe = new Recipe(recipeName, ingredientList, instructionsList);
                     recipeManager.addingRecipe(newRecipe);
 
-                    DefaultListModel<Recipe> recipeModel = (DefaultListModel<Recipe>) recipeList.getModel();
+                    recipeModel = (DefaultListModel<Recipe>) recipeList.getModel();
                     recipeModel.addElement(newRecipe);
 
                     recipeManager.saveRecipesToFile(RECIPE_FILE);
@@ -529,8 +536,8 @@ public class CookBookGUI implements CookBookConstants {
             playSound(RECIPE_SFX);
             recipeManager.removingRecipe(selectedRecipe.getName());
 
-            DefaultListModel<Recipe> model = (DefaultListModel<Recipe>) recipeList.getModel();
-            model.removeElement(selectedRecipe);
+            recipeModel = (DefaultListModel<Recipe>) recipeList.getModel();
+            recipeModel.removeElement(selectedRecipe);
 
             recipeDetailsArea.setText(""); // Removes what was currently displayed in the main page
 
@@ -569,7 +576,7 @@ public class CookBookGUI implements CookBookConstants {
 
             Object[] message = {
                 "Recipe Name:", recipeNameField,
-                "Ingredients (name:quantity per line):", new JScrollPane(ingredientsField),
+                "Ingredients (name:quantity:unit per line):", new JScrollPane(ingredientsField),
                 "Instructions (line-separated):", new JScrollPane(instructionsArea)
             };
 
@@ -606,9 +613,9 @@ public class CookBookGUI implements CookBookConstants {
                     Recipe updatedRecipe = new Recipe(recipeName, ingredientList, instructionsList);
                     recipeManager.modifyingRecipe(selectedRecipe.getName(), updatedRecipe);
 
-                    DefaultListModel<Recipe> model = (DefaultListModel<Recipe>) recipeList.getModel();
-                    int index = model.indexOf(selectedRecipe);
-                    model.set(index, updatedRecipe);
+                    recipeModel = (DefaultListModel<Recipe>) recipeList.getModel();
+                    int index = recipeModel.indexOf(selectedRecipe);
+                    recipeModel.set(index, updatedRecipe);
                     updateRecipeDetails();
 
                     // Save recipes to file
@@ -621,12 +628,11 @@ public class CookBookGUI implements CookBookConstants {
             
         }
     }
-    
 
     private boolean validIngredientFormat(String ingredients) {
         String[] ingredientArray = ingredients.split("\n");
         for (String ingredient : ingredientArray) {
-            if (!ingredient.matches("\\s*[\\w\\s]+\\s*:\\s*\\d+\\s*")) {
+            if (!ingredient.matches("\\s*[\\w\\s]+\\s*:\\s*\\d+\\s*:\\s*\\w+\\s*")) {
                 return false;
             }
         }
@@ -650,15 +656,18 @@ public class CookBookGUI implements CookBookConstants {
         // Used to save the user's previous input
         String ingredientNameInput = "";
         String quantityInput = "";
+        String unitInput = "";
 
         // Used to receive user input
         while (true) {
             JTextField ingredientNameField = new JTextField(ingredientNameInput);
             JTextField quantityField = new JTextField(quantityInput);
+            JTextField unitField = new JTextField(unitInput);
 
             Object[] message = {
                 "Ingredient Name:", ingredientNameField,
-                "Quantity:", quantityField
+                "Quantity:", quantityField,
+                "Unit:", unitField
             };
 
             // Displays the input in a window
@@ -668,14 +677,16 @@ public class CookBookGUI implements CookBookConstants {
             if (option == JOptionPane.OK_OPTION) {
                 String ingredientName = ingredientNameField.getText();
                 int quantity;
+                String unit = unitField.getText().trim();
 
                 // Save the current input to reuse it in case of error
                 ingredientNameInput = ingredientName;
                 quantityInput = quantityField.getText().trim();
+                unitInput = unit;
 
                 // Checks if the ingredient text section isn't empty
                 if (ingredientName.isEmpty()) {
-                    JOptionPane.showMessageDialog(frame, EMPTY_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, INGREDIENT_EMPTY_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
                     continue;
                 }
 
@@ -692,13 +703,18 @@ public class CookBookGUI implements CookBookConstants {
                     JOptionPane.showMessageDialog(frame, INTEGER_CHECK_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
                     continue;
                 }
-                
+
                 if (quantity < 0) {
                     JOptionPane.showMessageDialog(frame, NEGATIVE_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
                     continue;
                 }
+
+                if (unit.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, UNIT_EMPTY_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
+                    continue;
+                }
                 
-                Ingredient newIngredient = new Ingredient(ingredientName, quantity);
+                Ingredient newIngredient = new Ingredient(ingredientName, quantity, unit);
 
                 // It checks if the added ingredient is to the fridge or the shelf and then it adds
                 if (toFridgePanel) {
@@ -722,9 +738,6 @@ public class CookBookGUI implements CookBookConstants {
 
     // Method to check if an ingredient with the same name already exists in the fridge or shelf
     private boolean isDuplicateIngredient(String ingredientName) {
-
-        // Combine contents of fridge and shelf
-        List<Ingredient> combinedContents = new ArrayList<>();
         combinedContents.addAll(fridge.getContents());
         combinedContents.addAll(shelf.getContents());
 
@@ -749,7 +762,7 @@ public class CookBookGUI implements CookBookConstants {
                 playSound(FRIDGE_SFX);
                 // Then removes the ingredient from the fridge and shelf objects and removes the cell
                 fridge.removing(selectedIngredient);
-                DefaultListModel<Ingredient> fridgeModel = (DefaultListModel<Ingredient>) fridgeList.getModel();
+                fridgeModel = (DefaultListModel<Ingredient>) fridgeList.getModel();
                 fridgeModel.removeElement(selectedIngredient);
                 fridge.saveContentsToFile(FRIDGE_FILE);
             } else {
@@ -761,7 +774,7 @@ public class CookBookGUI implements CookBookConstants {
             if (selectedIngredient != null) {
                 playSound(SHELF_SFX);
                 shelf.removing(selectedIngredient);
-                DefaultListModel<Ingredient> shelfModel = (DefaultListModel<Ingredient>) shelfList.getModel();
+                shelfModel = (DefaultListModel<Ingredient>) shelfList.getModel();
                 shelfModel.removeElement(selectedIngredient);
                 shelf.saveContentsToFile(SHELF_FILE);
             } else {
@@ -861,6 +874,8 @@ public class CookBookGUI implements CookBookConstants {
 
     // Method to iterate and find all ingredients from fridge and shelf
     private Ingredient findIngredientInCombinedContents(List<Ingredient> combinedContents, String name) {
+        combinedContents.addAll(fridge.getContents());
+        combinedContents.addAll(shelf.getContents());
         for (Ingredient ingredient : combinedContents) {
             if (ingredient.getName().equalsIgnoreCase(name)) {
                 return ingredient;
@@ -875,7 +890,7 @@ public class CookBookGUI implements CookBookConstants {
     private void updateRecipeList() {
 
         // First it clears the not updated recipe list
-        DefaultListModel<Recipe> recipeModel = (DefaultListModel<Recipe>) recipeList.getModel();
+        recipeModel = (DefaultListModel<Recipe>) recipeList.getModel();
         recipeModel.clear();
 
         // Then iterates through the recipes once again, but this time its the newest one
@@ -895,17 +910,17 @@ public class CookBookGUI implements CookBookConstants {
 
     // Method to update fridge list
     private void updateFridgeList() {
-        DefaultListModel<Ingredient> model = (DefaultListModel<Ingredient>) fridgeList.getModel();
-        model.clear();
+        fridgeModel = (DefaultListModel<Ingredient>) fridgeList.getModel();
+        fridgeModel.clear();
         for (Ingredient ingredient : fridge.getContents()) {
-            model.addElement(ingredient);
+            fridgeModel.addElement(ingredient);
         }
         fridgeList.repaint();
     }
 
     // Method to update shelf list
     private void updateShelfList() {
-        DefaultListModel<Ingredient> shelfModel = (DefaultListModel<Ingredient>) shelfList.getModel();
+        shelfModel = (DefaultListModel<Ingredient>) shelfList.getModel();
         shelfModel.clear();
         for (Ingredient ingredient : shelf.getContents()) {
             shelfModel.addElement(ingredient);
@@ -928,18 +943,12 @@ public class CookBookGUI implements CookBookConstants {
      * Highlight the whole selected cell gray when selected
      */
     private void highlightIngredients(Recipe recipe) {
-
-        // A list containing the ingredients needed from the recipe is made to be matched with the ingredients from fridge and shelf
-        List<Ingredient> requiredIngredients = recipe.getIngredients();
-        List<Ingredient> combinedContents = new ArrayList<>(); // This list will be used to combine both the ingredients from fridge and shelf
         combinedContents.addAll(fridge.getContents());
         combinedContents.addAll(shelf.getContents());
 
-        // Reset highlighting for all ingredients and reset its status to not available
-        for (Ingredient ingredient : combinedContents) {
-            ingredient.setCell(removeHighlight);
-            ingredient.setStatus(notAvailable);
-        }
+        // A list containing the ingredients needed from the recipe is made to be matched with the ingredients from fridge and shelf
+        List<Ingredient> requiredIngredients = recipe.getIngredients();
+        resetIngredientStates();
 
         // Highlight required ingredients and set availability
         for (Ingredient requiredIngredient : requiredIngredients) {
@@ -947,11 +956,14 @@ public class CookBookGUI implements CookBookConstants {
             // Iterate all the ingredients from the fridge and shelf that match the same naming with the one from the recipe details
             Ingredient combinedIngredient = findIngredientInCombinedContents(combinedContents, requiredIngredient.getName());
             if (combinedIngredient != null) {
+                boolean unitsMatch = combinedIngredient.getUnit().equals(requiredIngredient.getUnit());
                 combinedIngredient.setCell(highlight);
 
                 // Checks if the ingredients from the fridge and shelf is equal or more than the one in the recipe
                 if (combinedIngredient.getQuantity() >= requiredIngredient.getQuantity()) {
-                    combinedIngredient.setStatus(available);
+                    if (unitsMatch) {
+                        combinedIngredient.setStatus(available);
+                    }
                 } else {
                     combinedIngredient.setStatus(notAvailable);
                 }
@@ -963,8 +975,8 @@ public class CookBookGUI implements CookBookConstants {
         updateShelfList();
     }
 
+    // Method to reset the ingredient highlighting
     private void resetIngredientStates() {
-        List<Ingredient> combinedContents = new ArrayList<>(); // This list will be used to combine both the ingredients from fridge and shelf
         combinedContents.addAll(fridge.getContents());
         combinedContents.addAll(shelf.getContents());
         for (Ingredient ingredient : combinedContents) {

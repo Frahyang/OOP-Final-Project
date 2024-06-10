@@ -56,10 +56,11 @@ public class RecipeManager {
         List<Ingredient> ingredientList = new ArrayList<>();
         for (String ingredientPair : ingredientPairs) {
             String[] parts = ingredientPair.split(":");
-            if (parts.length == 2) { // Check if the length of the string is 2
+            if (parts.length == 3) { // Check if the length of the string is 2
                 String name = parts[0].trim();
                 int quantity = Integer.parseInt(parts[1].trim());
-                ingredientList.add(new Ingredient(name, quantity));
+                String unit = parts[2].trim();
+                ingredientList.add(new Ingredient(name, quantity, unit));
             }
         }
         return ingredientList;

@@ -56,7 +56,7 @@ public interface CookBookConstants {
 
     // Constants for cook button
     String COOKING_SUCCESSFUL = "Recipe cooked successfully!";
-    String COOKING_FAILED = "Some ingredients are missing to cook this recipe.";
+    String COOKING_FAILED = "Some ingredients are either missing or have different units.";
     String COOK_ERROR_MESSAGE = "Please select a recipe to cook.";
     String COOK_WINDOW_TITLE = "Cook";
 
@@ -67,7 +67,7 @@ public interface CookBookConstants {
     String REMOVE_ERROR_MESSAGE = "Please select a recipe to remove.";
     String MODIFY_ERROR_MESSAGE = "Please select a recipe to modify.";
     String MODIFY_RECIPE_WINDOW_TITLE = "Modify Recipe";
-    String FORMAT_ERROR_MESSAGE = "Invalid ingredient format. Please enter ingredients in the format 'name:quantity' per line and ensure it is a positive value.";
+    String FORMAT_ERROR_MESSAGE = "Invalid ingredient format. Please enter ingredients in the format 'name:quantity:unit' per line and ensure it is a positive value.";
     String DUPLICATE_ERROR_MESSAGE = "Duplicate ingredients listed. Please enter unique ingredients.";
 
     // Constants for addIngredient, removeIngredient, setQuantityForIngredient
@@ -79,7 +79,8 @@ public interface CookBookConstants {
     String QUANTITY_RANGE_ERROR_MESSAGE = "Invalid quantity. Please enter a number between 1 and 100.";
     String INTEGER_CHECK_ERROR_MESSAGE = "Invalid quantity. Please enter an Integer.";
     String TYPE_CHECK_ERROR_MESSAGE = "Invalid input. Please enter a number.";
-    String EMPTY_ERROR_MESSAGE = "Ingredient name cannot be empty.";
+    String INGREDIENT_EMPTY_ERROR_MESSAGE = "Ingredient name cannot be empty.";
+    String UNIT_EMPTY_ERROR_MESSAGE = "Unit cannot be empty.";
     String EXISTING_INGREDIENT_ERROR_MESSAGE = "Ingredient already exists.";
     String NEGATIVE_ERROR_MESSAGE = "Ingredient quantity cannot be a negative value";
 

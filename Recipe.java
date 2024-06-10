@@ -36,7 +36,7 @@ public class Recipe implements Serializable {
             if (ingredientText.length() > 0) {
                 ingredientText.append("\n"); // To separate the ingredients in the ingredients text part when modifying the recipe
             }
-            ingredientText.append(ingredient.getName() + ":" + ingredient.getQuantity());
+            ingredientText.append(ingredient.getName() + ":" + ingredient.getQuantity() + ":" + ingredient.getUnit());
         }
         return ingredientText.toString();
     }
