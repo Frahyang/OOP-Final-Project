@@ -102,7 +102,7 @@ public class CookBookGUI implements CookBookConstants {
         // Sets the location of each respective panels
         frame.setLayout(new BorderLayout());
         frame.add(createRecipePanel(), BorderLayout.WEST); // The recipe panel set the left side of the app
-        frame.add(createCentralPanel(), BorderLayout.EAST); // The fridge and shelf panel to the right
+        frame.add(createStoragePanel(), BorderLayout.EAST); // The fridge and shelf panel to the right
         frame.add(createRecipeDetailPanel(), BorderLayout.CENTER); // The recipe details at the center
     }
 
@@ -363,7 +363,7 @@ public class CookBookGUI implements CookBookConstants {
     }
 
     // Method to split the fridge and shelf panel
-    private JSplitPane createCentralPanel() {
+    private JSplitPane createStoragePanel() {
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, createFridgePanel(), createShelfPanel());
         splitPane.setPreferredSize(new Dimension(PANEL_WIDTH, frame.getHeight()));
         splitPane.setTopComponent(createFridgePanel()); // Fridge will be at the top of the panel
