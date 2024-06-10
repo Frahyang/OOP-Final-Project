@@ -36,9 +36,6 @@ public class Ingredient implements Serializable {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
 
     // Necessary booleans
     public boolean isHighlighted() { // Decides if the ingredient should be highlighted
