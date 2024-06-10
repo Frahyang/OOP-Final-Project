@@ -487,8 +487,15 @@ public class CookBookGUI implements CookBookConstants {
                 ingredientsInput = ingredients;
                 instructionsInput = instructions;
 
+                // Check format
                 if (!validIngredientFormat(ingredients)) {
                     JOptionPane.showMessageDialog(frame, FORMAT_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
+                    continue;
+                }
+
+                // Check if the recipe name already exists
+                if (recipeManager.isDuplicateRecipe(recipeName)) {
+                    JOptionPane.showMessageDialog(frame, DUPLICATE_RECIPE_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
                     continue;
                 }
 
@@ -576,8 +583,15 @@ public class CookBookGUI implements CookBookConstants {
                 ingredientsInput = ingredients;
                 instructionsInput = instructions;
 
+                // Check format
                 if (!validIngredientFormat(ingredients)) {
                     JOptionPane.showMessageDialog(frame, FORMAT_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
+                    continue;
+                }
+
+                // Check if the recipe name already exists
+                if (recipeManager.isDuplicateRecipe(recipeName)) {
+                    JOptionPane.showMessageDialog(frame, DUPLICATE_RECIPE_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
                     continue;
                 }
 
