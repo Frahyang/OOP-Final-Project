@@ -1,0 +1,11 @@
+Cookbook
+- Contains existing recipes
+- A function to add new recipes and store them in the book
+- A function to remove existing recipes 
+- A function to modify recipes 
+- A function to search recipes
+- A function to filter recipes
+- A display to show the contents of the user's fridge, both refrigerator and freezer section
+- Each ingredient in a recipe will be compared to the value in the fridge, if there's equal or more of the certain ingredient in the fridge, display green, else, display red
+- A display to show condiments 
+- A button "cooked" that after pressed will remove the ingredients from the fridge with the recipe amount

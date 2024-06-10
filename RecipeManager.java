@@ -50,7 +50,7 @@ public class RecipeManager {
         return false;
     }
 
-    // Method to separate the ingredient name and quantity
+    // Method to convert from a simple ingredient text to a manipulatable one
     public List<Ingredient> parseIngredients(String ingredients) {
         String[] ingredientPairs = ingredients.split("\n");
         List<Ingredient> ingredientList = new ArrayList<>();

@@ -24,6 +24,7 @@ public class Recipe implements Serializable {
     public List<String> getInstructions() {
         return instructions;
     }
+
     // Method to convert into string
     public String toString() {
         return name;

@@ -30,7 +30,7 @@ public class Ingredient implements Serializable {
     }
 
     // Setters
-    public void setName(String name) {
+    public void setName(String name) { // This is useless
         this.name = name;
     }
     public void setQuantity(int quantity) {

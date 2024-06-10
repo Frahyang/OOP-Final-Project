@@ -1,4 +1,3 @@
-import java.io.Serializable;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
@@ -8,10 +7,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Storage implements Serializable {
+public class Storage {
 
     // Instance variables
-    private static final long serialVersionUID = 1L; // Ensure compatibility between different versions
     private List<Ingredient> contents;
 
     // Constructor

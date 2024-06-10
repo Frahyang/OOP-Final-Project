@@ -1,2 +1,10 @@
 # OOP-Final-Project
-report and poster still in progress
+The file for the,
+    project report,
+    class diagram image,
+    poster image,
+are in the others folder
+
+--UPDATE--
+Added units to ingredients
+Improvised some codes

@@ -645,7 +645,7 @@ public class CookBookGUI implements CookBookConstants {
     private boolean validIngredientFormat(String ingredients) {
         String[] ingredientArray = ingredients.split("\n");
         for (String ingredient : ingredientArray) {
-            if (!ingredient.matches("\\s*[\\w\\s]+\\s*:\\s*\\d+\\s*:\\s*\\w+\\s*")) {
+            if (!ingredient.matches("\\s*[\\w\\s]+\\s*:\\s*\\d+\\s*:\\s*[\\w\\s]+\\s*")) {
                 return false;
             }
         }
@@ -779,7 +779,7 @@ public class CookBookGUI implements CookBookConstants {
                 fridgeModel.removeElement(selectedIngredient);
                 fridge.saveContentsToFile(FRIDGE_FILE);
             } else {
-                JOptionPane.showMessageDialog(frame, FRIDGE_ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, FRIDGE_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
             }
         } else { // For shelf
             Ingredient selectedIngredient = shelfList.getSelectedValue(); // selectedIngredient only for the shelf
@@ -791,7 +791,7 @@ public class CookBookGUI implements CookBookConstants {
                 shelfModel.removeElement(selectedIngredient);
                 shelf.saveContentsToFile(SHELF_FILE);
             } else {
-                JOptionPane.showMessageDialog(frame, SHELF_ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, SHELF_ERROR_MESSAGE, ERROR_WINDOW_TITLE, JOptionPane.PLAIN_MESSAGE);
             }
         }
     }
