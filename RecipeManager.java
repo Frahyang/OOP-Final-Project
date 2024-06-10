@@ -38,6 +38,16 @@ public class RecipeManager {
         }
     }
 
+    // Method to check for recipe duplicates
+    public boolean isDuplicateRecipe(String recipeName) {
+        for (Recipe recipe : recipes) {
+            if (recipe.getName().equalsIgnoreCase(recipeName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Method to separate the ingredient name and quantity
     public List<Ingredient> parseIngredients(String ingredients) {
         String[] ingredientPairs = ingredients.split("\n");
