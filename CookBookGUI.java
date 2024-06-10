@@ -611,7 +611,7 @@ public class CookBookGUI implements CookBookConstants {
     private boolean validIngredientFormat(String ingredients) {
         String[] ingredientArray = ingredients.split("\n");
         for (String ingredient : ingredientArray) {
-            if (!ingredient.matches("\\s*[\\w\\s]+s*:\\s*\\d+\\s*")) {
+            if (!ingredient.matches("\\s*[\\w\\s]+\\s*:\\s*\\d+\\s*")) {
                 return false;
             }
         }
